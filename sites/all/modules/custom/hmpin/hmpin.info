@@ -1,0 +1,5 @@
+name = Harvard Magazine PIN
+description = "Integrates Harvard University PIN with Harvard Magazine website."
+package = "Custom"
+dependencies[] = pinserver
+core = 6.x

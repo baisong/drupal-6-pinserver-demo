@@ -1,0 +1,158 @@
+<?php
+
+/**
+ * @file
+ * Code for Harvard Magazine PIN module.
+ */
+
+/**
+ * Implements hook_init().
+ * 
+ * @fixme
+ * FOR TEMPORARY DEVELOPMENT PURPOSES ONLY.
+ * ONCE PINSERVER IS WORKING, THIS SHOULD BE REMOVED.
+ *
+ * This function simply checks on every page load
+ * if the current user has permission to administer pinserver,
+ * if the Pinserver module is incorrectly configured,
+ * and in this case, it alerts the admin to check the settings.
+ */
+function hmpin_init() {
+  // Only continues if the logged in user has permission to administer pinserver.
+  if (!user_access('administer pinserver')) {
+    return;
+  }
+
+  // Only continues to alert the user if the Pinserver status is FALSE (wrong).
+  $pinserver_settings = pinserver_check_system_settings();
+  if ($pinserver_settings['value']) {
+    return;
+  }
+
+  // Prepares the link to the admin settings page.
+  global $base_url;
+  $settings_url = $base_url . '/admin/settings/pinserver';
+
+  // Alerts the admin that the configuration is not correct.
+  drupal_set_message(t('Oops! Looks like Pinserver has not been properly configured. Please view the settings at ') . $settings_url);
+  drupal_set_message(var_dump($errors));
+}
+
+ /**
+  * Implements hook_menu().
+  *
+  * Hook menu is the Drupal API function which provides a list of "menu items".
+  * A menu item associates a path (string) like "custom-page" with a number of
+  * flexible settings to determine what to do when that path is requested.
+  *
+  * @see http://api.drupal.org/api/function/hook_menu/6‎
+  */
+function hmpin_menu() {
+  $items = array();
+  
+  // Provides the menu item for browsing Class Notes by issue number.
+  $items['classnotes/browse/issue/%node'] = array(
+    'title' => 'Class Notes',
+    'type' => MENU_NORMAL_ITEM,
+    'page callback' => 'hmpin_classnotes_page',
+    'page arguments' => array(3),
+    'access callback' => 'hmpin_classnotes_access',
+    'access arguments' => array(3),
+  );
+
+  // Provides the menu item for browsing Obituaries by issue number.
+  $items['obituaries/browse/issue/%node'] = array(
+    'title' => 'Obituaries',
+    'type' => MENU_NORMAL_ITEM,
+    'page callback' => 'hmpin_obituaries_page',
+    'page arguments' => array(3),
+    'access callback' => 'hmpin_obituaries_access',
+    'access arguments' => array(3),
+  );
+
+  return $items();
+}
+
+/**
+ * Access callback; provides content for "classnotes/browse/issue/%node".
+ */
+function hmpin_classnotes_access($node) {
+  // Starts with access FALSE (denied).
+  $access = FALSE;
+
+  // Handles the Pinserver authentication and redirect process.
+  if (pinserver_check_status()) {
+    $access = TRUE;
+  }
+  // To configure where users are redirected, see the settings form at
+  // admin/settings/pinserver
+  else {
+    pinserver_redirect();
+  }
+
+  return $access;
+}
+
+/**
+ * Page callback; provides content for "classnotes/browse/issue/%node".
+ */
+function hmpin_classnotes_page($node) {
+  // Starts with empty page content.
+  $content = '';
+  
+  // Users will only ever get to this point in execution if they have passed
+  // through pinserver authentication.
+
+  // So, we can safely assume we can access their HUID and Drupal user ID.
+  // Harvard ID (HUID)
+  //$huid = pinserver_get_session_huid();
+  // Drupal User ID
+  //$uid = iqss_pinserver_register_check_row();
+
+  // @todo build some content!
+  //$content = node_view($node);
+
+  return $content;
+}
+
+/**
+ * Access callback; provides content for "obituaries/browse/issue/%node".
+ */
+function hmpin_obituaries_access($node) {
+  // Starts with access FALSE (denied).
+  $access = FALSE;
+
+  // Handles the Pinserver authentication and redirect process.
+  if (pinserver_check_status()) {
+    $access = TRUE;
+  }
+  // To configure where users are redirected, see the settings form at
+  // admin/settings/pinserver
+  else {
+    pinserver_redirect();
+  }
+
+  return $access;
+}
+
+/**
+ * Page callback; provides content for "obituaries/browse/issue/%node".
+ */
+function hmpin_obituaries_page($node) {
+  // Starts with empty page content.
+  $content = '';
+
+  // Users will only ever get to this point in execution if they have passed
+  // through pinserver authentication.
+
+  // So, we can safely assume we can access their HUID and Drupal user ID.
+  // Harvard ID (HUID)
+  //$huid = pinserver_get_session_huid();
+  // Drupal User ID
+  //$uid = iqss_pinserver_register_check_row();
+
+  // @todo build some content!
+  //$content = node_view($node);
+
+  return $content;
+}

@@ -70,7 +70,7 @@ function hmpin_menu() {
     'access arguments' => array(3),
   );
 
-  return $items();
+  return $items;
 }
 
 /**

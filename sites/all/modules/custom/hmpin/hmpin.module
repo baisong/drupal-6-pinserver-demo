@@ -35,7 +35,7 @@ function hmpin_init() {
 
   // Alerts the admin that the configuration is not correct.
   drupal_set_message(t('Oops! Looks like Pinserver has not been properly configured. Please view the settings at ') . $settings_url);
-  drupal_set_message(var_dump($pinserver_settings));
+  drupal_set_message($pinserver_settings['message']);
 }
 
  /**

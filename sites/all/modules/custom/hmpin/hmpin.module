@@ -74,7 +74,7 @@ function hmpin_menu() {
 }
 
 /**
- * Access callback; provides content for "classnotes/browse/issue/%node".
+ * Access callback; checks PIN access for "classnotes/browse/issue/%node".
  */
 function hmpin_classnotes_access($node) {
   // Starts with access FALSE (denied).
@@ -116,7 +116,7 @@ function hmpin_classnotes_page($node) {
 }
 
 /**
- * Access callback; provides content for "obituaries/browse/issue/%node".
+ * Access callback; checks PIN access for "obituaries/browse/issue/%node".
  */
 function hmpin_obituaries_access($node) {
   // Starts with access FALSE (denied).
